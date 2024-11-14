@@ -38,8 +38,8 @@ st.markdown("""
 <h4 class="center-content">Oleh: MUTIA ZAHIRMA 21.11.41**</h4>
 """, unsafe_allow_html=True)
 
-# Adding an image
-st.image('wowww.jpeg')
+# # Adding an image
+# st.image('wowww.jpeg')
 
 # End main content div
 st.markdown('</div>', unsafe_allow_html=True)
