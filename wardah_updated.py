@@ -2,6 +2,7 @@ import joblib
 import streamlit as st
 from nltk.corpus import stopwords
 import nltk
+import string
 
 # Ensure stopwords are downloaded
 nltk.download('stopwords')
@@ -37,8 +38,8 @@ st.markdown("""
 <h4 class="center-content">Oleh: MUTIA ZAHIRMA 21.11.41**</h4>
 """, unsafe_allow_html=True)
 
-# # Adding an image
-# st.image('wowww.jpeg')
+# Adding an image
+st.image('wowww.jpeg')
 
 # End main content div
 st.markdown('</div>', unsafe_allow_html=True)
@@ -85,13 +86,29 @@ elif section == '3. Tentang Model':
 # Text input for prediction
 input_text = st.text_input('Masukkan ulasan produk')
 
+# Text preprocessing function
+def preprocess_text(text):
+    text = text.lower()
+    stop_words = set(stopwords.words('indonesian'))
+    text = ''.join([char for char in text if char not in string.punctuation])
+    words = text.split()
+    words = [word for word in words if word not in stop_words]
+    return ' '.join(words)
+
 # Button to perform prediction
 if st.button('Hasil Deteksi'):
     if input_text:  # Ensure input is not empty
-        # Predict directly using the pipeline
-        prediction = pipeline.predict([input_text])[0]
-        probability = pipeline.predict_proba([input_text])[0]
+        # Preprocess input text
+        processed_text = preprocess_text(input_text)
         
-        # Display the prediction and probabilities
-        st.write(f"Prediction: {prediction}")
-        st.write(f"Probability: {probability}")
+        # Predict directly from processed text
+        prediction = pipeline.predict([processed_text])[0]
+        probability = pipeline.predict_proba([processed_text])[0]  # Get prediction probabilities
+
+        # Display result and confidence
+        if prediction == 1:  # Assuming 1 is positive sentiment
+            st.success(f'Sentimen Positif Dengan Akurasi {probability[1] * 100:.2f}%')
+        else:
+            st.error(f'Sentimen Negatif Dengan Akurasi {probability[0] * 100:.2f}%')
+    else:
+        st.warning("Silakan masukkan ulasan sebelum melakukan prediksi.")
