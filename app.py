@@ -27,7 +27,7 @@ if st.button("Predict"):
         prediction_proba = model.predict_proba(processed_input)[0]
         
         # Display the result
-        sentiment = "Positive" if prediction == 1 else "Negative"
+        sentiment = "Positive" if prediction >= 0.95 else "Negative"
         confidence = max(prediction_proba) * 100
         st.subheader(f"Predicted Sentiment: {sentiment}")
         st.write(f"Confidence: {confidence:.2f}%")
