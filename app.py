@@ -12,6 +12,8 @@ import os
 # Download missing NLTK resources
 nltk.download('stopwords')
 nltk.download('punkt')
+import nltk
+    nltk.download('punkt_tab')
 
 # Preprocessing function
 stop_words = set(stopwords.words('indonesian'))
