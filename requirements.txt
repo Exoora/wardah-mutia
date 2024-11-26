@@ -1,7 +1,4 @@
 streamlit
-pandas
 scikit-learn
+pandas
 nltk
-wordcloud
-matplotlib
-imbalanced-learn
