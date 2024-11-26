@@ -7,26 +7,32 @@ from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 import re
 import string
+import os
 
-# Download NLTK stopwords if not already downloaded
+# Download missing NLTK resources
 nltk.download('stopwords')
-stop_words = set(stopwords.words('indonesian'))
+nltk.download('punkt')
 
 # Preprocessing function
+stop_words = set(stopwords.words('indonesian'))
+
 def preprocess_text(text):
-    text = text.lower()  # Convert to lowercase
+    text = text.lower()
     text = re.sub(r'\d+', '', text)  # Remove digits
     text = re.sub(r'[^\w\s]', '', text)  # Remove punctuation
     tokens = word_tokenize(text)  # Tokenize text
-    tokens = [word for word in tokens if word not in stop_words and word not in string.punctuation]  # Remove stopwords
+    tokens = [word for word in tokens if word not in stop_words and word not in string.punctuation]
     return ' '.join(tokens)
 
-# Load the TF-IDF Vectorizer and Model
+# Load the model and vectorizer
 @st.cache_resource
 def load_vectorizer_model():
-    with open('tfidf_vectorizer.pkl', 'rb') as vec_file:
+    model_path = os.path.join('models', 'wardah_model.pkl')
+    vectorizer_path = os.path.join('models', 'tfidf_vectorizer.pkl')
+    
+    with open(vectorizer_path, 'rb') as vec_file:
         vectorizer = pickle.load(vec_file)
-    with open('wardah_model.pkl', 'rb') as model_file:
+    with open(model_path, 'rb') as model_file:
         model = pickle.load(model_file)
     return vectorizer, model
 
@@ -45,7 +51,10 @@ if st.button("Analisis Sentimen"):
         st.error("Mohon masukkan ulasan untuk analisis.")
     else:
         # Preprocess and predict
-        processed_input = preprocess_text(user_input)
-        transformed_input = vectorizer.transform([processed_input])
-        prediction = model.predict(transformed_input)[0]
-        st.subheader(f"Sentimen: **{prediction.capitalize()}**")
+        try:
+            processed_input = preprocess_text(user_input)
+            transformed_input = vectorizer.transform([processed_input])
+            prediction = model.predict(transformed_input)[0]
+            st.subheader(f"Sentimen: **{prediction.capitalize()}**")
+        except Exception as e:
+            st.error(f"Terjadi kesalahan: {e}")
