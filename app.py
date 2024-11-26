@@ -1,13 +1,11 @@
-# app.py
 import streamlit as st
 import joblib
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-# Load the saved model
+# Load the saved model and vectorizer
 model_filename = 'sentiment_analysis_model.pkl'
 vectorizer_filename = 'tfidf_vectorizer.pkl'
 
-# Load model and vectorizer
 model = joblib.load(model_filename)
 vectorizer = joblib.load(vectorizer_filename)
 
@@ -30,7 +28,7 @@ if st.button("Predict"):
         
         # Display the result
         sentiment = "Positive" if prediction == 1 else "Negative"
-        confidence = max(prediction_proba) * 100  # Confidence as a percentage
+        confidence = max(prediction_proba) * 100
         st.subheader(f"Predicted Sentiment: {sentiment}")
         st.write(f"Confidence: {confidence:.2f}%")
     else:
