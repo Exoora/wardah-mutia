@@ -26,7 +26,7 @@ def preprocess_text(text):
 def load_vectorizer_model():
     with open('tfidf_vectorizer.pkl', 'rb') as vec_file:
         vectorizer = pickle.load(vec_file)
-    with open('multinomial_nb_model.pkl', 'rb') as model_file:
+    with open('wardah_model.pkl', 'rb') as model_file:
         model = pickle.load(model_file)
     return vectorizer, model
 
